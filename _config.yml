@@ -1,0 +1,71 @@
+# Site settings
+title: "CyberSec Forum"
+description: "A community-driven cybersecurity discussion platform"
+baseurl: "/cyber-security-forum"
+url: "https://sivolko.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# GitHub settings
+github:
+  username: sivolko
+  repository: cyber-security-forum
+
+# Forum settings
+categories:
+  - name: "Vulnerability Research"
+    slug: "vuln-research"
+    icon: "🔍"
+    color: "#ff4444"
+  - name: "Incident Response"
+    slug: "incident-response"
+    icon: "🚨"
+    color: "#ff8800"
+  - name: "Threat Intelligence"
+    slug: "threat-intel"
+    icon: "🕵️"
+    color: "#0099ff"
+  - name: "Malware Analysis"
+    slug: "malware-analysis"
+    icon: "🦠"
+    color: "#8b00ff"
+  - name: "Penetration Testing"
+    slug: "pentest"
+    icon: "⚔️"
+    color: "#00ff44"
+  - name: "Security Tools"
+    slug: "security-tools"
+    icon: "🛠️"
+    color: "#ffaa00"
+  - name: "Compliance & Governance"
+    slug: "compliance"
+    icon: "📋"
+    color: "#0088cc"
+  - name: "Security News"
+    slug: "security-news"
+    icon: "📰"
+    color: "#666666"
+
+# Collections
+collections:
+  discussions:
+    output: true
+    permalink: /:collection/:name/
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
