@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+    
+    <!-- SEO -->
+    {% seo %}
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <a href="{{ '/' | relative_url }}" class="logo">
+                    <span class="logo-icon">🔒</span>
+                    <span class="logo-text">{{ site.title }}</span>
+                </a>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Search discussions..." class="search-input">
+                    <button type="button" class="search-btn">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <a href="https://github.com/{{ site.github.username }}/{{ site.github.repository }}" class="github-link" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="{{ '/' | relative_url }}" class="nav-item {% if page.url == '/' %}active{% endif %}">
+                    <span class="nav-icon">🏠</span>
+                    <span>Home</span>
+                </a>
+                <a href="{{ '/popular' | relative_url }}" class="nav-item {% if page.url == '/popular/' %}active{% endif %}">
+                    <span class="nav-icon">🔥</span>
+                    <span>Popular</span>
+                </a>
+                <a href="{{ '/recent' | relative_url }}" class="nav-item {% if page.url == '/recent/' %}active{% endif %}">
+                    <span class="nav-icon">⏰</span>
+                    <span>Recent</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Categories</h3>
+                <div class="categories-list">
+                    {% for category in site.categories %}
+                    <a href="{{ '/category/' | append: category.slug | relative_url }}" class="category-item">
+                        <span class="category-icon">{{ category.icon }}</span>
+                        <span class="category-name">{{ category.name }}</span>
+                        <span class="category-count">0</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Quick Links</h3>
+                <div class="quick-links">
+                    <a href="https://github.com/{{ site.github.username }}/{{ site.github.repository }}/discussions/new" target="_blank" class="quick-link">
+                        <span>➕</span> Start Discussion
+                    </a>
+                    <a href="{{ '/tags' | relative_url }}" class="quick-link">
+                        <span>🏷️</span> Browse Tags
+                    </a>
+                    <a href="{{ '/guidelines' | relative_url }}" class="quick-link">
+                        <span>📜</span> Guidelines
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            {{ content }}
+        </main>
+        
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="widget">
+                <h3 class="widget-title">Popular Tags</h3>
+                <div class="tags-cloud" id="popular-tags">
+                    <!-- Tags will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title">Quick Stats</h3>
+                <div class="stats-list">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Discussions</span>
+                        <span class="stat-value" id="total-discussions">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Active Today</span>
+                        <span class="stat-value" id="active-today">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Contributors</span>
+                        <span class="stat-value" id="total-contributors">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="widget">
+                <h3 class="widget-title">Resources</h3>
+                <div class="resources-list">
+                    <a href="https://owasp.org" target="_blank" class="resource-link">
+                        <span>🔗</span> OWASP
+                    </a>
+                    <a href="https://cve.mitre.org" target="_blank" class="resource-link">
+                        <span>🔗</span> CVE Database
+                    </a>
+                    <a href="https://attack.mitre.org" target="_blank" class="resource-link">
+                        <span>🔗</span> MITRE ATT&CK
+                    </a>
+                    <a href="https://www.nist.gov/cyberframework" target="_blank" class="resource-link">
+                        <span>🔗</span> NIST Framework
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; {{ 'now' | date: '%Y' }} {{ site.title }}. Powered by GitHub Discussions & Jekyll.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

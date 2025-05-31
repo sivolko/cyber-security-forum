@@ -1,0 +1,57 @@
+---
+layout: default
+title: Home
+---
+
+<div class="forum-header">
+    <div class="forum-title">
+        <h1>Welcome to CyberSec Forum</h1>
+        <p>A community-driven platform for cybersecurity professionals, researchers, and enthusiasts</p>
+    </div>
+    
+    <div class="forum-actions">
+        <a href="https://github.com/{{ site.github.username }}/{{ site.github.repository }}/discussions/new" target="_blank" class="btn btn-primary">
+            <span>➕</span> Start New Discussion
+        </a>
+    </div>
+</div>
+
+<div class="content-grid">
+    <div class="main-feed">
+        <div class="feed-header">
+            <div class="feed-tabs">
+                <button class="tab-btn active" data-tab="hot">🔥 Hot</button>
+                <button class="tab-btn" data-tab="new">🆕 New</button>
+                <button class="tab-btn" data-tab="top">⭐ Top</button>
+            </div>
+            
+            <div class="feed-filters">
+                <select id="category-filter" class="filter-select">
+                    <option value="all">All Categories</option>
+                    {% for category in site.categories %}
+                    <option value="{{ category.slug }}">{{ category.icon }} {{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                
+                <select id="time-filter" class="filter-select">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="discussions-list" id="discussions-container">
+            <!-- Discussions will be loaded here via JavaScript -->
+            <div class="loading-placeholder">
+                <div class="loading-spinner"></div>
+                <p>Loading discussions...</p>
+            </div>
+        </div>
+        
+        <div class="load-more-container">
+            <button id="load-more-btn" class="btn btn-secondary">Load More Discussions</button>
+        </div>
+    </div>
+</div>
