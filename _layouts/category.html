@@ -1,0 +1,510 @@
+---
+layout: default
+---
+
+<div class="category-page">
+    <div class="category-header">
+        <div class="category-info">
+            <div class="category-icon">{{ page.icon }}</div>
+            <div class="category-details">
+                <h1 class="category-title">{{ page.title }}</h1>
+                <p class="category-description">{{ page.description }}</p>
+            </div>
+        </div>
+        
+        <div class="category-stats">
+            <div class="stat-box">
+                <span class="stat-number" id="category-discussions">0</span>
+                <span class="stat-label">Discussions</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number" id="category-contributors">0</span>
+                <span class="stat-label">Contributors</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number" id="category-activity">0</span>
+                <span class="stat-label">Active Today</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="category-content">
+        <div class="category-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="discussions">💬 Discussions</button>
+                <button class="nav-tab" data-tab="popular">🔥 Popular</button>
+                <button class="nav-tab" data-tab="recent">⏰ Recent</button>
+            </div>
+            
+            <div class="category-actions">
+                <a href="https://github.com/{{ site.github.username }}/{{ site.github.repository }}/discussions/new?category={{ page.slug }}" target="_blank" class="btn btn-primary">
+                    <span>➕</span> New Discussion
+                </a>
+            </div>
+        </div>
+        
+        <div class="tab-content">
+            <div class="tab-pane active" id="discussions-tab">
+                <div class="discussions-list" id="category-discussions-list">
+                    <div class="loading-placeholder">
+                        <div class="loading-spinner"></div>
+                        <p>Loading discussions...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-pane" id="popular-tab">
+                <div class="discussions-list" id="category-popular-list">
+                    <!-- Popular discussions for this category -->
+                </div>
+            </div>
+            
+            <div class="tab-pane" id="recent-tab">
+                <div class="discussions-list" id="category-recent-list">
+                    <!-- Recent discussions for this category -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const categorySlug = '{{ page.slug }}';
+const categoryName = '{{ page.title }}';
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadCategoryDiscussions();
+    setupCategoryTabs();
+    loadCategoryStats();
+});
+
+function setupCategoryTabs() {
+    const tabs = document.querySelectorAll('.nav-tab');
+    const panes = document.querySelectorAll('.tab-pane');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            panes.forEach(p => p.classList.remove('active'));
+            
+            tab.classList.add('active');
+            const targetPane = document.getElementById(tab.dataset.tab + '-tab');
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+            
+            // Load content based on tab
+            switch(tab.dataset.tab) {
+                case 'popular':
+                    loadCategoryPopular();
+                    break;
+                case 'recent':
+                    loadCategoryRecent();
+                    break;
+                default:
+                    loadCategoryDiscussions();
+            }
+        });
+    });
+}
+
+function loadCategoryDiscussions() {
+    // Mock category-specific discussions
+    const discussions = getCategoryMockData(categorySlug);
+    renderDiscussions(discussions, 'category-discussions-list');
+}
+
+function loadCategoryPopular() {
+    const discussions = getCategoryMockData(categorySlug).slice(0, 3);
+    renderDiscussions(discussions, 'category-popular-list');
+}
+
+function loadCategoryRecent() {
+    const discussions = getCategoryMockData(categorySlug).reverse().slice(0, 5);
+    renderDiscussions(discussions, 'category-recent-list');
+}
+
+function loadCategoryStats() {
+    // Mock stats
+    document.getElementById('category-discussions').textContent = Math.floor(Math.random() * 50) + 10;
+    document.getElementById('category-contributors').textContent = Math.floor(Math.random() * 30) + 5;
+    document.getElementById('category-activity').textContent = Math.floor(Math.random() * 10) + 1;
+}
+
+function getCategoryMockData(category) {
+    const mockData = {
+        'vuln-research': [
+            {
+                title: "CVE-2024-9999: Critical RCE in Enterprise Software",
+                excerpt: "Detailed analysis of a newly discovered critical vulnerability affecting enterprise software installations worldwide.",
+                author: { name: "vuln_researcher", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 3600000).toISOString(),
+                comments: 12,
+                reactions: { '+1': 25 }
+            },
+            {
+                title: "Zero-day Discovery Process: From Research to Disclosure",
+                excerpt: "A comprehensive guide on the responsible disclosure process for zero-day vulnerabilities.",
+                author: { name: "security_expert", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 7200000).toISOString(),
+                comments: 8,
+                reactions: { '+1': 18 }
+            }
+        ],
+        'incident-response': [
+            {
+                title: "Ransomware Incident Response: Lessons from the Frontlines",
+                excerpt: "Real-world insights from responding to multiple ransomware incidents across different industry sectors.",
+                author: { name: "ir_commander", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 1800000).toISOString(),
+                comments: 15,
+                reactions: { '+1': 32 }
+            },
+            {
+                title: "Building an Effective CSIRT: Team Structure and Processes",
+                excerpt: "Guide to establishing a Computer Security Incident Response Team with proper procedures and workflows.",
+                author: { name: "csirt_lead", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 5400000).toISOString(),
+                comments: 9,
+                reactions: { '+1': 21 }
+            }
+        ],
+        'threat-intel': [
+            {
+                title: "APT Attribution: Technical Indicators vs. Political Narratives",
+                excerpt: "Examining the challenges of accurate threat attribution in the context of geopolitical tensions.",
+                author: { name: "threat_analyst", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 2700000).toISOString(),
+                comments: 18,
+                reactions: { '+1': 28 }
+            }
+        ],
+        'malware-analysis': [
+            {
+                title: "Reverse Engineering Modern Packers: UPX and Beyond",
+                excerpt: "Advanced techniques for unpacking and analyzing modern malware packers and obfuscation methods.",
+                author: { name: "malware_rev", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 1200000).toISOString(),
+                comments: 11,
+                reactions: { '+1': 24 }
+            }
+        ],
+        'pentest': [
+            {
+                title: "Advanced Active Directory Attacks: Golden Ticket to Domain Admin",
+                excerpt: "Comprehensive guide to advanced Active Directory attack techniques and defensive countermeasures.",
+                author: { name: "ad_ninja", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 900000).toISOString(),
+                comments: 16,
+                reactions: { '+1': 35 }
+            }
+        ],
+        'security-tools': [
+            {
+                title: "Open Source Security Tools Roundup: 2024 Edition",
+                excerpt: "Comprehensive review of the best open source security tools released and updated in 2024.",
+                author: { name: "tool_curator", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 600000).toISOString(),
+                comments: 7,
+                reactions: { '+1': 19 }
+            }
+        ],
+        'compliance': [
+            {
+                title: "GDPR Compliance for Security Teams: Practical Implementation",
+                excerpt: "Practical guide for security professionals implementing GDPR compliance measures in their organizations.",
+                author: { name: "compliance_pro", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 1500000).toISOString(),
+                comments: 5,
+                reactions: { '+1': 14 }
+            }
+        ],
+        'security-news': [
+            {
+                title: "Weekly Security News Roundup: Major Breaches and Disclosures",
+                excerpt: "Summary of the week's most significant security incidents, vulnerabilities, and industry developments.",
+                author: { name: "news_curator", avatar: "/assets/images/default-avatar.svg" },
+                created_at: new Date(Date.now() - 300000).toISOString(),
+                comments: 3,
+                reactions: { '+1': 8 }
+            }
+        ]
+    };
+    
+    return mockData[category] || [];
+}
+
+function renderDiscussions(discussions, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    if (discussions.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">💬</div>
+                <h3>No discussions yet</h3>
+                <p>Be the first to start a discussion in ${categoryName}!</p>
+                <a href="https://github.com/{{ site.github.username }}/{{ site.github.repository }}/discussions/new?category=${categorySlug}" target="_blank" class="btn btn-primary">Start Discussion</a>
+            </div>
+        `;
+        return;
+    }
+    
+    const discussionsHtml = discussions.map(discussion => `
+        <article class="discussion-card" onclick="openDiscussion('#')">
+            <div class="discussion-header">
+                <h3 class="discussion-title">${discussion.title}</h3>
+                <div class="discussion-meta">
+                    <span class="discussion-date">${formatRelativeTime(discussion.created_at)}</span>
+                </div>
+            </div>
+            
+            <div class="discussion-excerpt">
+                ${discussion.excerpt}
+            </div>
+            
+            <div class="discussion-footer">
+                <div class="discussion-stats">
+                    <div class="stat-item">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 1l7 7h-4v7H5V8H1l7-7z"/>
+                        </svg>
+                        <span>${discussion.reactions['+1']}</span>
+                    </div>
+                    <div class="stat-item">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M2.678 11.894a1 1 0 01.287.801 10.97 10.97 0 01-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 01.71-.074A8.06 8.06 0 008 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 01-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 00.244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 01-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                        </svg>
+                        <span>${discussion.comments}</span>
+                    </div>
+                </div>
+                
+                <div class="discussion-author">
+                    <img src="${discussion.author.avatar}" alt="${discussion.author.name}" class="author-avatar">
+                    <span class="author-name">${discussion.author.name}</span>
+                </div>
+            </div>
+        </article>
+    `).join('');
+    
+    container.innerHTML = discussionsHtml;
+}
+
+function formatRelativeTime(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    
+    if (diffInSeconds < 60) return 'just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    
+    return date.toLocaleDateString();
+}
+
+function openDiscussion(url) {
+    if (url && url !== '#') {
+        window.open(url, '_blank');
+    }
+}
+</script>
+
+<style>
+.category-page {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.category-header {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+    padding: 32px 24px;
+    border-bottom: 1px solid var(--border-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.category-icon {
+    font-size: 48px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius-lg);
+    border: 2px solid var(--border-secondary);
+}
+
+.category-details h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.category-details p {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 600px;
+}
+
+.category-stats {
+    display: flex;
+    gap: 24px;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 12px 16px;
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-primary);
+    min-width: 80px;
+}
+
+.stat-number {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.category-content {
+    padding: 0;
+}
+
+.category-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-primary);
+    background-color: var(--bg-secondary);
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 4px;
+}
+
+.nav-tab {
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-tab:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.nav-tab.active {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.tab-content {
+    padding: 24px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .category-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 16px;
+    }
+    
+    .category-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .category-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 32px;
+    }
+    
+    .category-details h1 {
+        font-size: 24px;
+    }
+    
+    .category-stats {
+        gap: 16px;
+    }
+    
+    .stat-box {
+        min-width: 60px;
+        padding: 8px 12px;
+    }
+    
+    .stat-number {
+        font-size: 20px;
+    }
+    
+    .category-nav {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+    
+    .tab-content {
+        padding: 16px;
+    }
+}
+</style>
