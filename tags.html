@@ -1,0 +1,169 @@
+---
+layout: default
+title: Browse Tags
+permalink: /tags/
+---
+
+<div class="page-header">
+    <h1>🏷️ Browse Tags</h1>
+    <p>Explore discussions by topic and find content that interests you</p>
+</div>
+
+<div class="tags-page">
+    <div class="search-tags">
+        <input type="text" id="tag-search" placeholder="Search tags..." class="search-input">
+    </div>
+    
+    <div class="tags-grid" id="tags-container">
+        <!-- Tags will be loaded by JavaScript -->
+        <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading tags...</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    padding: 32px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.page-header h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.tags-page {
+    padding: 24px;
+}
+
+.search-tags {
+    max-width: 400px;
+    margin: 0 auto 32px;
+}
+
+.tags-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.tag-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.tag-card:hover {
+    border-color: var(--border-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.tag-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.tag-count {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.tag-description {
+    color: var(--text-muted);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .tags-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+    }
+    
+    .tag-card {
+        padding: 12px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadTags();
+    setupTagSearch();
+});
+
+function loadTags() {
+    const tags = [
+        { name: 'vulnerability', count: 45, description: 'Security vulnerabilities and CVEs' },
+        { name: 'malware', count: 38, description: 'Malware analysis and reverse engineering' },
+        { name: 'pentest', count: 32, description: 'Penetration testing methodologies' },
+        { name: 'incident-response', count: 28, description: 'Incident response and forensics' },
+        { name: 'threat-hunting', count: 25, description: 'Proactive threat detection' },
+        { name: 'siem', count: 22, description: 'Security Information and Event Management' },
+        { name: 'cloud-security', count: 20, description: 'Cloud platform security' },
+        { name: 'zero-day', count: 18, description: 'Zero-day vulnerabilities' },
+        { name: 'apt', count: 16, description: 'Advanced Persistent Threats' },
+        { name: 'forensics', count: 15, description: 'Digital forensics and investigation' },
+        { name: 'red-team', count: 14, description: 'Red team exercises and tactics' },
+        { name: 'blue-team', count: 12, description: 'Blue team defense strategies' },
+        { name: 'osint', count: 11, description: 'Open Source Intelligence' },
+        { name: 'compliance', count: 10, description: 'Regulatory compliance and frameworks' },
+        { name: 'phishing', count: 9, description: 'Phishing attacks and prevention' },
+        { name: 'ransomware', count: 8, description: 'Ransomware analysis and mitigation' }
+    ];
+    
+    renderTags(tags);
+}
+
+function renderTags(tags) {
+    const container = document.getElementById('tags-container');
+    const tagsHtml = tags.map(tag => `
+        <div class="tag-card" onclick="searchByTag('${tag.name}')">
+            <div class="tag-name">#${tag.name}</div>
+            <div class="tag-count">${tag.count} discussions</div>
+            <div class="tag-description">${tag.description}</div>
+        </div>
+    `).join('');
+    
+    container.innerHTML = tagsHtml;
+}
+
+function setupTagSearch() {
+    const searchInput = document.getElementById('tag-search');
+    searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase();
+        const tagCards = document.querySelectorAll('.tag-card');
+        
+        tagCards.forEach(card => {
+            const tagName = card.querySelector('.tag-name').textContent.toLowerCase();
+            const tagDescription = card.querySelector('.tag-description').textContent.toLowerCase();
+            
+            if (tagName.includes(query) || tagDescription.includes(query)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
+
+function searchByTag(tag) {
+    window.location.href = `/?search=${encodeURIComponent(tag)}`;
+}
+</script>

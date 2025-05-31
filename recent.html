@@ -1,0 +1,472 @@
+---
+layout: default
+title: Recent Discussions
+permalink: /recent/
+---
+
+<div class="page-header">
+    <h1>⏰ Recent Discussions</h1>
+    <p>Latest cybersecurity discussions and updates</p>
+</div>
+
+<div class="recent-content">
+    <div class="feed-controls">
+        <div class="view-options">
+            <button class="view-btn active" data-view="list">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm0 3a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm0 3a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm0 3a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11z"/>
+                </svg>
+                List
+            </button>
+            <button class="view-btn" data-view="compact">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+                </svg>
+                Compact
+            </button>
+        </div>
+        
+        <div class="sort-options">
+            <select id="sort-select" class="filter-select">
+                <option value="newest">Newest First</option>
+                <option value="updated">Recently Updated</option>
+                <option value="comments">Most Comments</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="recent-discussions" id="recent-container">
+        <!-- Recent discussions will be loaded here -->
+        <div class="loading-placeholder">
+            <div class="loading-spinner"></div>
+            <p>Loading recent discussions...</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    padding: 32px 24px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.page-header h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.recent-content {
+    padding: 24px;
+}
+
+.feed-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-primary);
+}
+
+.view-options {
+    display: flex;
+    gap: 4px;
+    background-color: var(--bg-secondary);
+    padding: 4px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-primary);
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.view-btn.active {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.recent-discussions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recent-discussions.compact {
+    gap: 8px;
+}
+
+.recent-discussion {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.recent-discussion:hover {
+    border-color: var(--border-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.recent-discussion.compact {
+    padding: 12px 16px;
+}
+
+.discussion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.discussion-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.discussion-category {
+    background-color: var(--accent-secondary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.discussion-time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.time-created {
+    margin-bottom: 2px;
+}
+
+.time-updated {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.discussion-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.recent-discussion.compact .discussion-title {
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.discussion-excerpt {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.recent-discussion.compact .discussion-excerpt {
+    -webkit-line-clamp: 1;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.discussion-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.discussion-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.recent-discussion.compact .discussion-stats {
+    gap: 12px;
+    font-size: 11px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.discussion-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.author-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--bg-tertiary);
+}
+
+.recent-discussion.compact .author-avatar {
+    width: 20px;
+    height: 20px;
+}
+
+.author-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.recent-discussion.compact .author-name {
+    font-size: 11px;
+}
+
+@media (max-width: 768px) {
+    .feed-controls {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    
+    .view-options {
+        justify-content: center;
+    }
+    
+    .recent-discussion {
+        padding: 12px;
+    }
+    
+    .discussion-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .discussion-time {
+        align-items: flex-start;
+    }
+}
+</style>
+
+<script>
+let currentView = 'list';
+let currentSort = 'newest';
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadRecentDiscussions();
+    setupViewControls();
+    setupSortControls();
+});
+
+function setupViewControls() {
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            viewButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentView = btn.dataset.view;
+            updateView();
+        });
+    });
+}
+
+function setupSortControls() {
+    const sortSelect = document.getElementById('sort-select');
+    sortSelect.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        loadRecentDiscussions();
+    });
+}
+
+function updateView() {
+    const container = document.getElementById('recent-container');
+    const discussions = container.querySelectorAll('.recent-discussion');
+    
+    discussions.forEach(discussion => {
+        if (currentView === 'compact') {
+            discussion.classList.add('compact');
+        } else {
+            discussion.classList.remove('compact');
+        }
+    });
+    
+    if (currentView === 'compact') {
+        container.classList.add('compact');
+    } else {
+        container.classList.remove('compact');
+    }
+}
+
+function loadRecentDiscussions() {
+    const container = document.getElementById('recent-container');
+    
+    // Mock recent discussions data
+    let discussions = [
+        {
+            title: "New Kali Linux 2024.2 Release: What's New for Penetration Testers",
+            excerpt: "Comprehensive review of the latest Kali Linux release featuring new tools, improved hardware support, and enhanced cloud integration capabilities.",
+            category: "Security Tools",
+            author: { name: "kali_user", avatar: "/assets/images/default-avatar.svg" },
+            created: "12 minutes ago",
+            updated: "5 minutes ago",
+            upvotes: 8,
+            comments: 3,
+            isNew: true
+        },
+        {
+            title: "CVE-2024-5678: WordPress Plugin Vulnerability Affects 2M+ Sites",
+            excerpt: "Critical SQL injection vulnerability discovered in popular WordPress plugin. Immediate patching recommended for all installations.",
+            category: "Vulnerability Research",
+            author: { name: "wp_security", avatar: "/assets/images/default-avatar.svg" },
+            created: "1 hour ago",
+            updated: "45 minutes ago",
+            upvotes: 23,
+            comments: 7,
+            isNew: true
+        },
+        {
+            title: "Incident Response Playbook: Ransomware Attack Simulation",
+            excerpt: "Step-by-step walkthrough of responding to a simulated ransomware attack, including containment, eradication, and recovery procedures.",
+            category: "Incident Response",
+            author: { name: "ir_specialist", avatar: "/assets/images/default-avatar.svg" },
+            created: "3 hours ago",
+            updated: "2 hours ago",
+            upvotes: 15,
+            comments: 4
+        },
+        {
+            title: "API Security Testing: Common Vulnerabilities and Automated Tools",
+            excerpt: "Comprehensive guide to API security testing covering OWASP API Top 10, testing methodologies, and tool recommendations.",
+            category: "Penetration Testing",
+            author: { name: "api_tester", avatar: "/assets/images/default-avatar.svg" },
+            created: "6 hours ago",
+            updated: "4 hours ago",
+            upvotes: 19,
+            comments: 8
+        },
+        {
+            title: "Threat Intel Brief: Emerging APT Group 'CyberViper' Targets Healthcare",
+            excerpt: "Analysis of new threat actor targeting healthcare organizations with custom malware and sophisticated social engineering techniques.",
+            category: "Threat Intelligence",
+            author: { name: "threat_hunter", avatar: "/assets/images/default-avatar.svg" },
+            created: "8 hours ago",
+            updated: "6 hours ago",
+            upvotes: 31,
+            comments: 12
+        }
+    ];
+    
+    // Sort discussions based on current sort option
+    switch (currentSort) {
+        case 'updated':
+            discussions.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+            break;
+        case 'comments':
+            discussions.sort((a, b) => b.comments - a.comments);
+            break;
+        default: // newest
+            discussions.sort((a, b) => new Date(b.created) - new Date(a.created));
+    }
+    
+    const discussionsHtml = discussions.map(discussion => `
+        <article class="recent-discussion ${currentView === 'compact' ? 'compact' : ''}" onclick="openDiscussion('#')">
+            <div class="discussion-header">
+                <div class="discussion-meta">
+                    <span class="discussion-category">${discussion.category}</span>
+                    ${discussion.isNew ? '<span class="new-badge">🆕 NEW</span>' : ''}
+                </div>
+                <div class="discussion-time">
+                    <div class="time-created">Created ${discussion.created}</div>
+                    <div class="time-updated">Updated ${discussion.updated}</div>
+                </div>
+            </div>
+            
+            <h2 class="discussion-title">${discussion.title}</h2>
+            
+            <div class="discussion-excerpt">
+                ${discussion.excerpt}
+            </div>
+            
+            <div class="discussion-footer">
+                <div class="discussion-stats">
+                    <div class="stat-item">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 1l7 7h-4v7H5V8H1l7-7z"/>
+                        </svg>
+                        <span>${discussion.upvotes}</span>
+                    </div>
+                    <div class="stat-item">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M2.678 11.894a1 1 0 01.287.801 10.97 10.97 0 01-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 01.71-.074A8.06 8.06 0 008 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 01-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 00.244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 01-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                        </svg>
+                        <span>${discussion.comments}</span>
+                    </div>
+                </div>
+                
+                <div class="discussion-author">
+                    <img src="${discussion.author.avatar}" alt="${discussion.author.name}" class="author-avatar">
+                    <span class="author-name">${discussion.author.name}</span>
+                </div>
+            </div>
+        </article>
+    `).join('');
+    
+    container.innerHTML = discussionsHtml;
+    container.className = `recent-discussions ${currentView === 'compact' ? 'compact' : ''}`;
+}
+
+function openDiscussion(url) {
+    if (url && url !== '#') {
+        window.open(url, '_blank');
+    }
+}
+</script>
+
+<style>
+.new-badge {
+    background-color: var(--accent-success);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+</style>
